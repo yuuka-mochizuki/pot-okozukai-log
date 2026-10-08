@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
+<title>ポット回収ログ</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ポット回収ログ">
+</head>
+<body>
+<header class="app-header">
+  <h1 class="app-title">🍲 ポット回収ログ</h1>
+  <span class="app-sub">自動調理ポットのお小遣い回収</span>
+</header>
+
+<main>
+  <!-- 回収サマリー -->
+  <section class="card is-progress">
+    <div class="progress-head">
+      <div>
+        <span class="summary-label">回収済み</span>
+        <span class="summary-value" id="collected">¥0</span>
+      </div>
+      <div class="progress-right">
+        <span class="summary-label">購入金額</span>
+        <span class="summary-value-sm" id="priceDisplay">¥0</span>
+      </div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-foot">
+      <span id="progressPercent">0%</span>
+      <span id="remainingLabel">残り ¥0</span>
+    </div>
+    <p class="complete-banner" id="completeBanner" hidden>🎉 回収完了！元が取れました！</p>
+  </section>
+
+  <!-- 使った記録フォーム -->
+  <section class="card">
+    <h2 class="card-title" id="formTitle">使った記録をつける</h2>
+    <form id="entryForm">
+      <div class="form-row">
+        <label for="inDate">日付</label>
+        <input type="date" id="inDate" required>
+      </div>
+      <div class="form-row">
+        <label for="inMenu">作ったメニュー</label>
+        <input type="text" id="inMenu" list="menuList" placeholder="例: カレー / 煮込みハンバーグ" required>
+        <datalist id="menuList"></datalist>
+      </div>
+      <div class="form-row">
+        <label for="inMemo">メモ（任意）</label>
+        <input type="text" id="inMemo" placeholder="例: 味付けは麺つゆで代用">
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="submitBtn">使った！（+300円）</button>
+        <button type="button" class="btn" id="cancelEditBtn" hidden>キャンセル</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- メニュー別の記録 -->
+  <section class="card">
+    <h2 class="card-title">メニュー別の記録</h2>
+    <div id="menuTotals" class="service-totals"></div>
+    <p class="hint" id="menuHint" hidden>メニュー名をタップすると、下の履歴をそのメニューだけに絞り込めます。</p>
+  </section>
+
+  <!-- 履歴 -->
+  <section class="card">
+    <div class="chart-head">
+      <h2 class="card-title">使った履歴</h2>
+      <span class="entry-count" id="entryCount"></span>
+    </div>
+    <div class="filter-bar" id="filterBar" hidden>
+      <span id="filterLabel"></span>
+      <button type="button" class="btn btn-small" id="clearFilterBtn">絞り込み解除</button>
+    </div>
+    <div id="historyList"></div>
+  </section>
+
+  <!-- 設定 -->
+  <section class="card">
+    <h2 class="card-title">設定</h2>
+    <div class="form-row">
+      <label for="inPrice">購入金額（円）</label>
+      <input type="number" id="inPrice" min="0" step="1" inputmode="numeric" placeholder="例: 15000">
+    </div>
+    <div class="form-row">
+      <label for="inPerUse">1回あたりのお小遣い（円）</label>
+      <input type="number" id="inPerUse" min="1" step="1" inputmode="numeric" placeholder="300">
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn btn-primary" id="saveSettingsBtn">設定を保存</button>
+    </div>
+    <p class="hint">使うたびに、この金額が「回収済み」に加算されます。購入金額に達すると回収完了になります。</p>
+  </section>
+
+  <!-- データ管理 -->
+  <section class="card">
+    <h2 class="card-title">データ管理</h2>
+    <div class="form-actions">
+      <button type="button" class="btn" id="exportBtn">エクスポート（JSON）</button>
+      <button type="button" class="btn" id="importBtn">インポート</button>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
+    </div>
+    <p class="hint">データはこの端末のブラウザ内に保存されます。機種変更やバックアップの際はエクスポートしてください。</p>
+  </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
